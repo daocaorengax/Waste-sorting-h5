@@ -1,0 +1,42 @@
+$co-bg-color: #F5F5F5; // 页面背景色
+
+$co-theme-color: #409eff; // 主题色。主色调
+
+$co-font-color: #333; // 字体默认颜色
+
+$co-main-red: #EF4033; 
+
+$co-main-blue: #5792FD;
+
+$co-sub-title-color: #666; // 副标题
+
+$co-auxiliary-color: #FF4B10; // 辅助色
+
+$co-title-color: #000000;
+
+/*
+* @param { String } $r 水平样式
+* @param { String } $c 垂直样式
+* @param { String } $w 是否缩放
+* 水平排列样式
+*/
+@mixin displayRow($r: center, $c: center, $w: nowrap) {
+  display: flex;
+  flex-wrap: $w;
+  justify-content: $r;
+  align-items: $c;
+}
+
+/*
+* @param { String } $r 垂直样式
+* @param { String } $c 水平样式
+* @param { String } $w 是否缩放
+* 垂直排列样式
+*/
+@mixin displayColumn($r: flex-start, $c: center, $w: nowrap) {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: $w;
+  justify-content: $r;
+  align-items: $c;
+}

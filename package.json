@@ -1,0 +1,51 @@
+{
+  "name": "jyb-h5-home",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --open",
+    "serve:prod": "vue-cli-service serve --mode alpha",
+    "build": "vue-cli-service build",
+    "build:alpha": "vue-cli-service build --mode alpha",
+    "build:test": "vue-cli-service build --mode test",
+    "build:pre": "vue-cli-service build --mode pre",
+    "build:analyz": "vue-cli-service build --mode analyz",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "animated-scroll": "0.0.3",
+    "callapp-lib": "^3.5.1",
+    "core-js": "^3.6.5",
+    "dayjs": "^1.10.4",
+    "lodash-es": "^4.17.21",
+    "swiper": "^5.4.1",
+    "vue": "^2.6.11",
+    "vue-awesome-swiper": "^4.1.1",
+    "vue-router": "^3.2.0",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-component": "^1.1.1",
+    "compression-webpack-plugin": "^5.0.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "node-sass": "^4.14.1",
+    "npm-run-all": "^4.1.5",
+    "sass-loader": "^8.0.2",
+    "sass-resources-loader": "^2.1.1",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^4.4.0"
+  }
+}
