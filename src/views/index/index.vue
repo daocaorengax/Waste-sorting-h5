@@ -1,6 +1,7 @@
+<!--首页 搜索-->
 <template>
   <div class="page-wrapper" >
-    首页
+    
   </div>
 </template>
 
