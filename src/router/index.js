@@ -9,11 +9,25 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/',
+      name: 'login',
+      component: () => import('@/views/login/login.vue'),
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('@/views/login/login.vue'),
       meta: {
         title: '登录',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/index',
+      name: 'index',
+      component: () => import('@/views/index/index.vue'),
+      meta: {
+        title: '首页',
         keepAlive: true
       }
     }
