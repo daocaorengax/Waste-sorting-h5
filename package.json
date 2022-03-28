@@ -14,10 +14,13 @@
   },
   "dependencies": {
     "animated-scroll": "0.0.3",
+    "axios": "^0.26.1",
     "callapp-lib": "^3.5.1",
     "core-js": "^3.6.5",
     "dayjs": "^1.10.4",
+    "express": "^4.17.3",
     "lodash-es": "^4.17.21",
+    "mysql": "^2.18.1",
     "swiper": "^5.4.1",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
