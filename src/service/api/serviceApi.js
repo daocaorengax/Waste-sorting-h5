@@ -38,7 +38,7 @@ router.post('/login', (req, res) => {
   // var sql_password = $sql.user.select_password;
   var params = req.body;
   if (params.name) {
-      sql_name += " where user_name ='"+ params.name +"'";
+      sql_name += " where user_name ='"+ params.name +"' and user_password ='"+ params.password+"'";
       console.log(sql_name);
   }    
   conn.query(sql_name, params.name, function(err, result) {
@@ -47,16 +47,16 @@ router.post('/login', (req, res) => {
       }
       // console.log(result);
       if (result[0] === undefined) {
-          res.send('-1')   //查询不出username，data 返回-1
+          res.send('')   //查询不出username，data 返回-1
       } else {
           var resultArray = result[0];
           console.log(resultArray);
           console.log(params);
-          if(resultArray.password === params.password) {
+        //   if(resultArray.password === params.password) {
               jsonWrite(res, result);
-          } else {
-              res.send('0')   //username
-          }
+        //   } else {
+        //       res.send('0')   //username
+        //   }
       }
   })
 });
@@ -141,6 +141,8 @@ router.post('/createRub', (req, res) => {
         }
     })
   });
+
+  // SELECT user_name,rubbish_name,rubbish_pic,rubbish_type FROM `user` as a INNER JOIN rubbish as b WHERE a.id = '1' AND b.id = '10000'
   
 
 
