@@ -3,10 +3,10 @@
   <div class="page" >
     <div class="page-head">
       <div class="page-head__left">
-        <van-image width="100" :src="require('../../assets/img/sun.png')"/>
+        <van-image width="110" :src="require('../../assets/img/sun.png')"/>
       </div>
       <div class="page-head__rigth">
-        <van-image width="100" :src="require('../../assets/img/rainbow.png')"/>
+        <van-image width="110" :src="require('../../assets/img/rainbow.png')"/>
       </div>
     </div>
     <div class="page-conent">
@@ -21,20 +21,17 @@
           </div>
         </div>
       </div>
-      <div class="page-conent__lishi"  v-else>
-        <div class="lishi--img">
-          <van-image width="100" :src="require('../../assets/img/rainbow.png')"/>
-          <van-image width="100" :src="require('../../assets/img/rainbow.png')"/>
+      <div class="page-conent__lishi jiangluosan"  v-else>
+        <div class="lishi--img" @click="setLitterClick">
+          <van-image width="100" :src="require('../../assets/img/jiangluosan.jpg')"/>
+          <van-image width="100" :src="require('../../assets/icon/aicao.png')"/>
         </div>
       </div>
-      <div class="page-conent__box">
-        <div class="page-conent__box--item"  @click="getHistory(1)">
-          <van-image  :src="require('../../assets/img/lajitong01.png')"/>
-        </div>
-        <div class="page-conent__box--item"  @click="getHistory(2)">
-          <van-image  :src="require('../../assets/img/lajitong02.png')"/>
-        </div>
-      </div>
+      <van-row  class="page-conent__box" type="flex" justify="space-around">
+        <van-col  class="page-conent__box--item" span="6" v-for="i in 4" :key="i"  @click="getHistory(i)">
+          <van-image width="100" :src="require('../../assets/img/0'+i+'.jpg')"/>
+        </van-col>
+      </van-row>
     </div>
   </div>
 </template>
@@ -45,7 +42,8 @@ export default {
   data () {
     return {
       searchValue:'',//搜索内容
-      showHistory:false//是否显示搜索历史
+      showHistory:false,//是否显示搜索历史
+      litterDate:{}
     }
   },
   mixins: [],
@@ -73,6 +71,11 @@ export default {
     getHistory(v){
       this.showHistory=true
       console.log(v,'调用历史记录接口');
+    },
+    // 扔垃圾
+    setLitterClick(){
+      //垃圾写入记录
+
     }
   }
 }
@@ -108,6 +111,16 @@ export default {
         color: #413b38;
 
       }
+      .lishi--img{
+        width: 100px;
+        // display: flex;
+        // flex-direction: column;
+        // justify-content:space-between;
+
+      }
+    }
+    .jiangluosan{
+      margin: 0 auto;
     }
     .lishi--box{
       display: flex;
@@ -125,12 +138,10 @@ export default {
       }
     }
     &__box{
-      display: flex;
-      justify-content:space-around;
-      padding-bottom: 30px;
       background: url('../../assets/img/lawn.png') no-repeat top center/100px 68px;
       background-size: 100% auto;
       background-position: 0 100%;
+      height: 120px;
     }
   }
 }
