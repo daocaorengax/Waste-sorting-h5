@@ -24,6 +24,20 @@ export default {
     // }).then(function(error) {
     //     console.log(error);
     //   })
+    //创建垃圾
+    //  this.$http.post('/api/user/createRub',{name:'报纸',type:'1',pic:'图片',remarks:'日常了解每日资讯'}).then(function(response) {
+    //   console.log(response)
+    // })
+    //搜索垃圾
+    //  this.$http.post('/api/user/searchRub',{name:'报'}).then(function(response) {
+    //   console.log(response)
+    // }).then(function(error) {
+    //     console.log(error);
+    //   })
+    //生成用户丢弃记录
+   this.$http.post('/api/user/userDiscardLog',{userId:'1',rubbishId:'10000'}).then(function(response) {
+      console.log(response)
+    })
   }
 }
 </script>

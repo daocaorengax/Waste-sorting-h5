@@ -1,8 +1,8 @@
 //Express 服务开启方式  node app
-const userApi = require('./api/userApi')
-const fs = require('fs')
-const path = require('path')
-const bodyParser = require('body-parser');
+const userApi = require('./api/serviceApi')
+// const fs = require('fs')
+// const path = require('path')
+// const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
