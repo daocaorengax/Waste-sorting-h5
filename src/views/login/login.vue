@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import apiLogin from "@/api/apiLogin"
+// import apiLogin from "@/api/apiLogin"
 export default {
   name: "login",
   data () {
@@ -95,18 +95,16 @@ export default {
         forbidClick: true,
         message: '登录中...'
       })
-      apiLogin.accountLogin({
-        username: this.userPhone,
-        password: btoa(this.userPassword)
-      }).then(res => {
+      this.$http.post('/api/user/login',{name:this.userPhone,password:this.userPassword}).then(function(res) {
         console.log(res)
-        let { data, state, msg } = res.data
+        let { data, statusText } = res
         loadingToast.clear()
-        if (state === 'ok') {
+        if (statusText === 'OK'&&data) {
           //登陆成功后的操作
           this.$toast('登陆成功')
         } else {
-          this.$toast(msg)
+          this.loginLoading = false
+          this.$toast('登录失败，请重新尝试！')
         }
         this.loginLoading = false
       }).catch(err => {
@@ -114,6 +112,25 @@ export default {
         this.loginLoading = false
         this.$toast('登录失败，请重新尝试！')
       })
+      // apiLogin.accountLogin({
+      //   username: this.userPhone,
+      //   password: btoa(this.userPassword)
+      // }).then(res => {
+      //   console.log(res)
+      //   let { data, state, msg } = res.data
+      //   loadingToast.clear()
+      //   if (state === 'ok') {
+      //     //登陆成功后的操作
+      //     this.$toast('登陆成功')
+      //   } else {
+      //     this.$toast(msg)
+      //   }
+      //   this.loginLoading = false
+      // }).catch(err => {
+      //   loadingToast.clear()
+      //   this.loginLoading = false
+      //   this.$toast('登录失败，请重新尝试！')
+      // })
     },
     openAppTip () {
       this.$dialog.confirm({

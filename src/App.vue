@@ -35,9 +35,9 @@ export default {
     //     console.log(error);
     //   })
     //生成用户丢弃记录
-   this.$http.post('/api/user/userDiscardLog',{userId:'1',rubbishId:'10000'}).then(function(response) {
-      console.log(response)
-    })
+  //  this.$http.post('/api/user/userDiscardLog',{userId:'1',rubbishId:'10000'}).then(function(response) {
+  //     console.log(response)
+  //   })
   }
 }
 </script>
