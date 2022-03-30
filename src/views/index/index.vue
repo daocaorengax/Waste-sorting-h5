@@ -14,7 +14,7 @@
     </div>
     <div class="page-conent">
       <div class="page-conent__search">
-        <van-search :left-icon="require('../../assets/img/search.png')" v-model="searchValue" placeholder="请输入搜索关键词" @search="onSearch" @blur="onSearch"/>
+        <van-search :left-icon="require('../../assets/img/search.png')" v-model="searchValue" placeholder="请输入搜索关键词" @search="onSearch"/>
       </div>
       <div class="page-conent__lishi" v-if="showHistory">
         <div class="lishi--title">历史记录</div>
@@ -100,7 +100,10 @@ export default {
       // 动画
       this.showAnimation=true
       console.log(this.jiangluosanHeight,'--jiangluosanHeight',this.jiangluosanWidth,'--jiangluosanWidth');
-
+      setInterval(() => {
+        this.showHistory=false
+        
+      }, 3000);
       console.log(h,this.$refs.jiangluosan,'元素高');
     }
   }
