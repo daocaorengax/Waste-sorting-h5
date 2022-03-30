@@ -53,7 +53,7 @@ router.post('/login', (req, res) => {
           console.log(resultArray);
           console.log(params);
         //   if(resultArray.password === params.password) {
-              jsonWrite(res, result);
+              jsonWrite(res, resultArray);
         //   } else {
         //       res.send('0')   //username
         //   }
