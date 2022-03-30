@@ -1,6 +1,9 @@
 <!--首页 搜索-->
 <template>
-  <div class="page" >
+  <div class="page" :style="{
+    '--jiangluosanHeight':jiangluosanHeight,
+    '--jiangluosanWidth':jiangluosanWidth,
+  }">
     <div class="page-head">
       <div class="page-head__left">
         <van-image width="110" :src="require('../../assets/img/sun.png')"/>
@@ -21,10 +24,10 @@
           </div>
         </div>
       </div>
-      <div class="page-conent__lishi jiangluosan"  v-else>
-        <div class="lishi--img" @click="setLitterClick">
-          <van-image width="100" :src="require('../../assets/img/jiangluosan.jpg')"/>
-          <van-image width="100" :src="require('../../assets/icon/aicao.png')"/>
+      <div ref="jiangluosan" class="page-conent__lishi jiangluosan"  v-else>
+        <div class="lishi--img" :class="{'animation':showAnimation}" @click="setLitterClick">
+          <van-image :src="require('../../assets/img/jiangluosan.jpg')"/>
+          <van-image width="80" :src="require('../../assets/icon/aicao.png')"/>
         </div>
       </div>
       <van-row  class="page-conent__box" type="flex" justify="space-around">
@@ -43,14 +46,18 @@ export default {
     return {
       searchValue:'',//搜索内容
       showHistory:false,//是否显示搜索历史
-      litterDate:{}
+      showAnimation:false,//是否显示动画
+      litterDate:{},
+      jiangluosanHeight:'',//中间区域高度
+      jiangluosanWidth:''//中间区域宽度
     }
   },
   mixins: [],
   computed: {
   },
   components: {},
-  created () {},
+  created () {
+  },
   methods: {
     //历史记录点击事件
     itemClick(e){
@@ -63,7 +70,18 @@ export default {
     },
     //搜索
     onSearch(){
+      var that = this
       this.showHistory=false
+      //搜索垃圾
+       this.$http.post('/api/user/searchRub',{name:this.searchValue})
+       .then(function(res) {
+         let {data,status} = res
+        console.log(res,'--搜索垃圾')
+        that.litterDate = data
+      })
+      .catch(function(error) {
+          console.log(error);
+        })
 
       console.log(this.searchValue,'searchValue');
     },
@@ -74,8 +92,16 @@ export default {
     },
     // 扔垃圾
     setLitterClick(){
+      var h = this.$refs.jiangluosan.offsetHeight
+      var w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)/4;
       //垃圾写入记录
+      this.jiangluosanHeight = (h-100)+'px';
+      this.jiangluosanWidth = w*(1.5)+'px'
+      // 动画
+      this.showAnimation=true
+      console.log(this.jiangluosanHeight,'--jiangluosanHeight',this.jiangluosanWidth,'--jiangluosanWidth');
 
+      console.log(h,this.$refs.jiangluosan,'元素高');
     }
   }
 }
@@ -112,15 +138,40 @@ export default {
 
       }
       .lishi--img{
-        width: 100px;
-        // display: flex;
-        // flex-direction: column;
-        // justify-content:space-between;
+        width: 120px;
+        text-align: center;
+        position:absolute;
+        left: 50%;
+        transform: translateX(-50%);
 
+      }
+      .animation{
+        animation-name:myfirst;
+        animation-duration:3s;
+        animation-timing-function:linear;
+        animation-delay:1s;
+        /* Safari and Chrome: */
+        -webkit-animation-name:myfirst;
+        -webkit-animation-duration:3s;
+        -webkit-animation-timing-function:linear;
+        -webkit-animation-delay:1s;
+      }
+      @keyframes myfirst
+      {
+        from {left:50%; top:0;}
+        to {left:var(--jiangluosanWidth); top:var(--jiangluosanHeight);}
+      }
+
+      @-webkit-keyframes myfirst /* Safari and Chrome */
+      {
+        from {left:50%; top:0;}
+        to {left:var(--jiangluosanWidth); top:var(--jiangluosanHeight);}
       }
     }
     .jiangluosan{
+      width: 100%;
       margin: 0 auto;
+      position: relative;
     }
     .lishi--box{
       display: flex;

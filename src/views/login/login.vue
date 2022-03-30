@@ -33,7 +33,7 @@
             :maxlength="30"
             v-model="userPassword"
             placeholder="请输入密码"
-            autocomplete="new-password"
+            autocomplete="off"
           >
             <template #button>
               <div @click="hidePassword = !hidePassword" class="switch-login-type-btn am-flex-rc-center">
@@ -59,6 +59,7 @@
 
 <script>
 // import apiLogin from "@/api/apiLogin"
+import { Toast } from 'vant'
 export default {
   name: "login",
   data () {
@@ -77,60 +78,45 @@ export default {
       if (this.loginLoading) {
         return
       } else if (!this.userPhone) {
-        this.$toast('请输入手机号')
+        Toast('请输入手机号')
         return
       } else if (this.userPhone.length !== 11) {
-        this.$toast('请输入正确手机号')
+        Toast('请输入正确手机号')
         return
       } else if (!this.userPassword) {
-        this.$toast('请输入密码')
+        Toast('请输入密码')
         return
       }
       this.loginLoading = true
       this.accountLogin()
     },
     accountLogin () {
-      const loadingToast = this.$toast.loading({
+      var vm = this
+      const loadingToast = Toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
         message: '登录中...'
       })
-      this.$http.post('/api/user/login',{name:this.userPhone,password:this.userPassword}).then(function(res) {
-        console.log(res)
+      this.$http.post('/api/user/login',{name:this.userPhone,password:this.userPassword})
+      .then(function(res) {
         let { data, statusText } = res
         loadingToast.clear()
-        if (statusText === 'OK'&&data) {
+        if (statusText == 'OK'&&data.length>0) {
           //登陆成功后的操作
-          this.$toast('登陆成功')
+          localStorage.setItem('userInfo',data[0])
+          Toast('登陆成功')
+          vm.$router.push('/index')
         } else {
-          this.loginLoading = false
-          this.$toast('登录失败，请重新尝试！')
+          vm.loginLoading = false
+          Toast('登录失败，请重新尝试！--0')
         }
-        this.loginLoading = false
-      }).catch(err => {
-        loadingToast.clear()
-        this.loginLoading = false
-        this.$toast('登录失败，请重新尝试！')
+        vm.loginLoading = false
       })
-      // apiLogin.accountLogin({
-      //   username: this.userPhone,
-      //   password: btoa(this.userPassword)
-      // }).then(res => {
-      //   console.log(res)
-      //   let { data, state, msg } = res.data
-      //   loadingToast.clear()
-      //   if (state === 'ok') {
-      //     //登陆成功后的操作
-      //     this.$toast('登陆成功')
-      //   } else {
-      //     this.$toast(msg)
-      //   }
-      //   this.loginLoading = false
-      // }).catch(err => {
-      //   loadingToast.clear()
-      //   this.loginLoading = false
-      //   this.$toast('登录失败，请重新尝试！')
-      // })
+      .catch(err => {
+        loadingToast.clear()
+        vm.loginLoading = false
+        Toast('登录失败，请重新尝试！---1')
+      })
     },
     openAppTip () {
       this.$dialog.confirm({
