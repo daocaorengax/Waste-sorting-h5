@@ -53,7 +53,7 @@ router.post('/login', (req, res) => {
           console.log(resultArray);
           console.log(params);
         //   if(resultArray.password === params.password) {
-              jsonWrite(res, result);
+              jsonWrite(res, resultArray);
         //   } else {
         //       res.send('0')   //username
         //   }
@@ -104,7 +104,7 @@ router.post('/createRub', (req, res) => {
     // var sql_password = $sql.user.select_password;
     var params = req.body;
     if (params.name) {
-        sql_name += " where rubbish_name like'"+ params.name +"%'";
+        sql_name += " where rubbish_name like'%"+ params.name +"%'";
         console.log(sql_name);
     }    
     conn.query(sql_name, params.name, function(err, result) {
