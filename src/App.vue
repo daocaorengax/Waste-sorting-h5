@@ -37,11 +37,11 @@ export default {
     // }
  
     //搜索垃圾
-    //  this.$http.post('/api/user/searchRub',{name:'报'}).then(function(response) {
-    //   console.log(response)
-    // }).then(function(error) {
-    //     console.log(error);
-    //   })
+     this.$http.post('/api/user/searchRub',{name:'瓶'}).then(function(response) {
+      console.log(response)
+    }).then(function(error) {
+        console.log(error);
+      })
     //生成用户丢弃记录
   //  this.$http.post('/api/user/userDiscardLog',{userId:'1',rubbishId:'10000'}).then(function(response) {
   //     console.log(response)
