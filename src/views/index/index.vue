@@ -17,17 +17,17 @@
         <van-search :left-icon="require('../../assets/img/search.png')" v-model="searchValue" placeholder="请输入搜索关键词" @search="onSearch"/>
       </div>
       <div class="page-conent__lishi" v-if="showHistory">
-        <div class="lishi--title">历史记录</div>
+        <div class="lishi--title">{{history.name}}历史记录</div>
         <div class="lishi--box">
-          <div class="lishi--box-item" v-for="(e,i) in 30" :key="i" @click="itemClick(e)">
+          <div class="lishi--box-item" v-for="(e,i) in history.length" :key="i" @click="itemClick(e)">
             标题{{i}}
           </div>
         </div>
       </div>
-      <div ref="jiangluosan" class="page-conent__lishi jiangluosan"  v-else>
+      <div ref="jiangluosan" class="page-conent__lishi jiangluosan"  v-else-if="litterDate.rubbish_pic">
         <div class="lishi--img" :class="{'animation':showAnimation}" @click="setLitterClick">
           <van-image :src="require('../../assets/img/jiangluosan.jpg')"/>
-          <van-image width="80" :src="require('../../assets/icon/aicao.png')"/>
+          <van-image width="80" :src="require('../../assets/icon/'+litterDate.rubbish_pic+'.png')"/>
         </div>
       </div>
       <van-row  class="page-conent__box" type="flex" justify="space-around">
@@ -49,7 +49,8 @@ export default {
       showAnimation:false,//是否显示动画
       litterDate:{},
       jiangluosanHeight:'',//中间区域高度
-      jiangluosanWidth:''//中间区域宽度
+      jiangluosanWidth:'',//中间区域宽度
+      history:{},
     }
   },
   mixins: [],
@@ -62,7 +63,7 @@ export default {
     //历史记录点击事件
     itemClick(e){
       console.log(e,'历史记录点击事件');
-      this.searchValue=e?.rubbish_name
+      this.searchValue=e?.rubbish_name||"米"
       //调用搜索接口
       if (this.searchValue) {
         this.onSearch()
@@ -76,8 +77,8 @@ export default {
        this.$http.post('/api/user/searchRub',{name:this.searchValue})
        .then(function(res) {
          let {data,status} = res
-        console.log(res,'--搜索垃圾')
-        that.litterDate = data
+        console.log(res,data,status,'--搜索垃圾')
+        that.litterDate = data[0]
       })
       .catch(function(error) {
           console.log(error);
@@ -88,23 +89,35 @@ export default {
     //调用历史记录接口
     getHistory(v){
       this.showHistory=true
+      let list = [{length:10,name:'可回收垃圾'},{length:2,name:'厨余垃圾'},{length:5,name:'其他垃圾'},{length:10,name:'有害垃圾'},]
+      this.history=list[v-1]
       console.log(v,'调用历史记录接口');
     },
     // 扔垃圾
     setLitterClick(){
+      let that = this
       var h = this.$refs.jiangluosan.offsetHeight
       var w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)/4;
-      //垃圾写入记录
       this.jiangluosanHeight = (h-100)+'px';
-      this.jiangluosanWidth = w*(1.5)+'px'
+      this.jiangluosanWidth = w*(this.litterDate.rubbish_type-0.5)+'px'
+      console.log(this.jiangluosanWidth ,this.litterDate.rubbish_type,'--this.jiangluosanWidth ');
       // 动画
       this.showAnimation=true
-      console.log(this.jiangluosanHeight,'--jiangluosanHeight',this.jiangluosanWidth,'--jiangluosanWidth');
+      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      //生成用户丢弃记录
+      this.$http.post('/api/user/userDiscardLog',{userId:userInfo.id,rubbishId:this.litterDate.id})
+      .then(function(res) {
+        that.litterDate={}
+        console.log(res,'--生成用户丢弃记录')
+      })
+      .catch((err)=>{
+        console.log(err,'--err');
+      })
       setInterval(() => {
-        this.showHistory=false
-        
+        that.litterDate={}
+        that.searchValue=''
+        that.showAnimation = false
       }, 3000);
-      console.log(h,this.$refs.jiangluosan,'元素高');
     }
   }
 }
@@ -150,25 +163,25 @@ export default {
       }
       .animation{
         animation-name:myfirst;
-        animation-duration:3s;
+        animation-duration:2s;
         animation-timing-function:linear;
         animation-delay:1s;
         /* Safari and Chrome: */
         -webkit-animation-name:myfirst;
-        -webkit-animation-duration:3s;
+        -webkit-animation-duration:2s;
         -webkit-animation-timing-function:linear;
         -webkit-animation-delay:1s;
       }
       @keyframes myfirst
       {
-        from {left:50%; top:0;}
-        to {left:var(--jiangluosanWidth); top:var(--jiangluosanHeight);}
+        from {left:50%; top:0;display: block;}
+        to {left:var(--jiangluosanWidth); top:var(--jiangluosanHeight);display: none;}
       }
 
       @-webkit-keyframes myfirst /* Safari and Chrome */
       {
-        from {left:50%; top:0;}
-        to {left:var(--jiangluosanWidth); top:var(--jiangluosanHeight);}
+        from {left:50%; top:0;display: block;}
+        to {left:var(--jiangluosanWidth); top:var(--jiangluosanHeight);display: none;}
       }
     }
     .jiangluosan{

@@ -101,9 +101,9 @@ export default {
       .then(function(res) {
         let { data, statusText } = res
         loadingToast.clear()
-        if (statusText == 'OK'&&data.length>0) {
+        if (statusText == 'OK'&&data) {
           //登陆成功后的操作
-          localStorage.setItem('userInfo',data[0])
+          localStorage.setItem('userInfo',JSON.stringify(data))
           Toast('登陆成功')
           vm.$router.push('/index')
         } else {
