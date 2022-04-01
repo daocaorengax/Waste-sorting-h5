@@ -47,7 +47,7 @@ export default {
   //     console.log(response)
   //   })
   //查询用户丢弃记录
-    this.$http.post('/api/user/searchRubByUser',{userId:1}).then(function(response) {
+    this.$http.post('/api/user/searchRubByUser',{userId:1,type:1}).then(function(response) {
       console.log(response)
     }).then(function(error) {
         console.log(error);

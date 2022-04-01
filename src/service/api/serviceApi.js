@@ -150,7 +150,7 @@ router.post('/createRub', (req, res) => {
     // var sql_password = $sql.user.select_password;
     var params = req.body;
     if (params.userId) {
-        sql_name += "where a.user_id ="+ params.userId +" and b.id = a.rubbish_id";
+        sql_name += "where a.user_id ="+ params.userId +" and b.id = a.rubbish_id and b.rubbish_type ="+ params.type;
         console.log(sql_name);
     }    
     conn.query(sql_name, params.userId, function(err, result) {

@@ -17,10 +17,10 @@
         <van-search :left-icon="require('../../assets/img/search.png')" v-model="searchValue" placeholder="请输入搜索关键词" @search="onSearch"/>
       </div>
       <div class="page-conent__lishi" v-if="showHistory">
-        <div class="lishi--title">{{history.name}}历史记录</div>
+        <div class="lishi--title">{{history.typeName}}历史记录</div>
         <div class="lishi--box">
-          <div class="lishi--box-item" v-for="(e,i) in history.length" :key="i" @click="itemClick(e)">
-            标题{{i}}
+          <div class="lishi--box-item" v-for="(e,i) in history.list" :key="i" @click="itemClick(e)">
+           {{e.rubbish_name}}
           </div>
         </div>
       </div>
@@ -31,8 +31,8 @@
         </div>
       </div>
       <van-row  class="page-conent__box" type="flex" justify="space-around">
-        <van-col  class="page-conent__box--item" span="6" v-for="i in 4" :key="i"  @click="getHistory(i)">
-          <van-image width="100" :src="require('../../assets/img/0'+i+'.jpg')"/>
+        <van-col  class="page-conent__box--item" span="6" v-for="type in Object.keys(RUBBISH_TYPE)" :key="type"  @click="getHistory(type)">
+          <van-image width="100" :src="require('../../assets/img/0'+RUBBISH_TYPE[type]+'.jpg')"/>
         </van-col>
       </van-row>
     </div>
@@ -50,11 +50,30 @@ export default {
       litterDate:{},
       jiangluosanHeight:'',//中间区域高度
       jiangluosanWidth:'',//中间区域宽度
-      history:{},
+      history:{}
     }
   },
   mixins: [],
   computed: {
+    userInfo(){
+      return JSON.parse(localStorage.getItem('userInfo'))
+    },
+    RUBBISH_TYPE(){
+      return {
+        RECYCLABLE:1,
+        KITCHEN:2,
+        OTHER:3,
+        HARMFUL:4
+      }
+    },
+    RUBBISH_NAME(){
+      return {
+        RECYCLABLE:'可回收垃圾',
+        KITCHEN:'厨余垃圾',
+        OTHER:'其他垃圾',
+        HARMFUL:'有害垃圾',
+      }
+    }
   },
   components: {},
   created () {
@@ -88,10 +107,22 @@ export default {
     },
     //调用历史记录接口
     getHistory(v){
+      const that = this
       this.showHistory=true
-      let list = [{length:10,name:'可回收垃圾'},{length:2,name:'厨余垃圾'},{length:5,name:'其他垃圾'},{length:10,name:'有害垃圾'},]
-      this.history=list[v-1]
       console.log(v,'调用历史记录接口');
+      //搜索历史
+       this.$http.post('/api/user/searchRubByUser',{userId:that.userInfo.id,type:that.RUBBISH_TYPE[v]})
+       .then(function(res) {
+         let {data,status} = res
+        // console.log(res,data,status,'--搜索垃圾')
+        that.history = {
+          typeName:that.RUBBISH_NAME[v],
+          list:data
+        }
+      })
+      .catch(function(error) {
+          console.log(error);
+        })
     },
     // 扔垃圾
     setLitterClick(){
@@ -103,9 +134,9 @@ export default {
       console.log(this.jiangluosanWidth ,this.litterDate.rubbish_type,'--this.jiangluosanWidth ');
       // 动画
       this.showAnimation=true
-      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      // let userInfo = JSON.parse(localStorage.getItem('userInfo'))
       //生成用户丢弃记录
-      this.$http.post('/api/user/userDiscardLog',{userId:userInfo.id,rubbishId:this.litterDate.id})
+      this.$http.post('/api/user/userDiscardLog',{userId:that.userInfo.id,rubbishId:this.litterDate.id})
       .then(function(res) {
         that.litterDate={}
         console.log(res,'--生成用户丢弃记录')
