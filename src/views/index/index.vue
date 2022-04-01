@@ -20,6 +20,7 @@
         <div class="lishi--title">{{history.typeName}}历史记录</div>
         <div class="lishi--box">
           <div class="lishi--box-item" v-for="(e,i) in history.list" :key="i" @click="itemClick(e)">
+            <van-image width="80" :src="require('../../assets/icon/'+e.rubbish_pic+'.png')"/>
            {{e.rubbish_name}}
           </div>
         </div>
