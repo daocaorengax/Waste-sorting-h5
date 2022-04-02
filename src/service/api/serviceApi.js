@@ -47,7 +47,7 @@ router.post('/login', (req, res) => {
       }
       // console.log(result);
       if (result[0] === undefined) {
-          res.send('')   //查询不出username，data 返回-1
+          res.send({})   //查询不出username，data 返回-1
       } else {
           var resultArray = result[0];
           console.log(resultArray);
@@ -76,7 +76,7 @@ router.get('/getUser', (req, res) => {
       }
       // console.log(result);
       if (result[0] === undefined) {
-          res.send('-1')   //查询不出username，data 返回-1
+          res.send({})   //查询不出username，data 返回-1
       } else {
           jsonWrite(res, result);
       }
@@ -113,7 +113,7 @@ router.post('/createRub', (req, res) => {
         }
         // console.log(result);
         if (result[0] === undefined) {
-            res.send('-1')   //查询不到则data 返回-1
+            res.send([])   //查询不到则data 返回-1
         } else {
             var resultArray = result[0];
             console.log(resultArray);
@@ -144,6 +144,26 @@ router.post('/createRub', (req, res) => {
 
   // SELECT user_name,rubbish_name,rubbish_pic,rubbish_type FROM `user` as a INNER JOIN rubbish as b WHERE a.id = '1' AND b.id = '10000'
   
-
+  //查询用户历史操作
+  router.post('/searchRubByUser', (req, res) => {
+    var sql_name = $sql.discard.innerSearch;
+    // var sql_password = $sql.user.select_password;
+    var params = req.body;
+    if (params.userId) {
+        sql_name += "where a.user_id ="+ params.userId +" and b.id = a.rubbish_id and b.rubbish_type ="+ params.type;
+        console.log(sql_name);
+    }    
+    conn.query(sql_name, params.userId, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        // console.log(result);
+        if (result[0] === undefined) {
+            res.send([])   //查询不到则data 返回-1
+        } else {
+            jsonWrite(res, result);
+        }
+    })
+  });
 
 module.exports = router;
