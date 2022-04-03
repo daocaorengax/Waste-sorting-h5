@@ -1,5 +1,9 @@
 # Waste-sorting-h5
 # 垃圾分类h5-首页
+## 用到的前端框架 vue2.0
+https://cn.vuejs.org/
+## UI框架 vantUI
+https://vant-contrib.gitee.io/vant/v2/#/zh-CN/form
 
 ## Project setup
 ```
@@ -49,6 +53,28 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## 规范
 
+## 文件目录
+src
+  api--接口文件
+  assets--静态文件（图片）
+  externalCdn--全局第三方js文件引入（vue/vuex/vue-router）
+  request---请求封装
+  router--路由配置文件
+  service-
+    api-接口封装
+    mysql_db--数据库连接配置
+    util--方法文件（汉字转拼音）
+    app.js--开启服务，启动数据库连接
+  styles--全局样式文件
+  views--页面文件
+    index--主页（搜索页面）
+    login--登陆页
+  app.vue--前端项目总输出vue文件
+  main.js -- 全局配置文件
+  
+    
+
+
 ### css
 项目通用全局css 命名空间：`am`
 
@@ -80,6 +106,7 @@ lodash [中文网站](https://www.lodashjs.com/) [官网](https://lodash.com/)
 [await-to-js](https://github.com/scopsy/await-to-js) - 异步等待包装，无需try-catch即可轻松处理错误
 
 [vant](https://vant-contrib.gitee.io/vant/#/zh-CN/) - vant ui
+
 
 ## 常见问题
 

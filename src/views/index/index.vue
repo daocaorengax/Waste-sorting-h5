@@ -150,9 +150,6 @@ export default {
       // 动画
       this.showAnimation=true
       setTimeout(() => {
-        that.litterDate={}
-        that.searchValue=''
-        that.showAnimation = false
         //生成用户丢弃记录
         this.$http.post('/api/user/userDiscardLog',{userId:that.userInfo.id,rubbishId:this.litterDate.id})
         .then(function(res) {
@@ -162,6 +159,8 @@ export default {
         .catch((err)=>{
           console.log(err,'--err');
         })
+        that.searchValue=''
+        that.showAnimation = false
       }, 3000);
     }
   }
