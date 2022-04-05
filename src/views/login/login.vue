@@ -101,14 +101,14 @@ export default {
       .then(function(res) {
         let { data, statusText } = res
         loadingToast.clear()
-        if (statusText == 'OK'&&data) {
+        if (statusText == 'OK'&&Object.keys(data).length>0) {
           //登陆成功后的操作
           localStorage.setItem('userInfo',JSON.stringify(data))
           Toast('登陆成功')
           vm.$router.push('/index')
         } else {
           vm.loginLoading = false
-          Toast('登录失败，请重新尝试！--0')
+          Toast('登录失败，请重新尝试！')
         }
         vm.loginLoading = false
       })
