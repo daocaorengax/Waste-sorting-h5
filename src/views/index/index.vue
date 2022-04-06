@@ -151,11 +151,11 @@ export default {
       this.showAnimation=true
       let userInfo = JSON.parse(localStorage.getItem('userInfo'))
       setTimeout(() => {
-        that.litterDate={}
+        // that.litterDate={}
         that.searchValue=''
         that.showAnimation = false
         //生成用户丢弃记录
-        that.$http.post('/api/user/userDiscardLog',{userId:userInfo.id,rubbishId:this.litterDate.id})
+        that.$http.post('/api/user/userDiscardLog',{userId:userInfo.id,rubbishId:that.litterDate.id})
         .then(function(res) {
           console.log(res,'--生成用户丢弃记录')
         })
