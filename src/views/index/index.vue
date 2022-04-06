@@ -15,6 +15,12 @@
     <div class="page-conent">
       <div class="page-conent__search">
         <van-search :left-icon="require('../../assets/img/search.png')" v-model="searchValue" placeholder="请输入搜索关键词" @search="onSearch"/>
+        <!-- 搜索提示 -->
+        <van-cell-group class="page-conent__list" v-if="showList.length>0">
+          <van-cell v-for="(item,index) in showList" 
+              :title="item.rubbish_name" 
+              @click="searchTs(item)"/>
+        </van-cell-group>
       </div>
       <div class="page-conent__lishi" v-if="showHistory">
         <div class="lishi--title">{{history.typeName}}历史记录</div>
@@ -48,10 +54,12 @@ export default {
       searchValue:'',//搜索内容
       showHistory:false,//是否显示搜索历史
       showAnimation:false,//是否显示动画
-      litterDate:{},
+      litterDate:{},//
       jiangluosanHeight:'',//中间区域高度
       jiangluosanWidth:'',//中间区域宽度
-      history:{}
+      history:{},
+      showList:[],//搜索提示数据
+
     }
   },
   mixins: [],
@@ -98,13 +106,19 @@ export default {
        .then(function(res) {
          let {data,status} = res
         console.log(res,data,status,'--搜索垃圾')
-        that.litterDate = data[0]
+        that.showList = data
       })
       .catch(function(error) {
           console.log(error);
         })
 
       console.log(this.searchValue,'searchValue');
+    },
+    // 展示搜索
+    searchTs(e){
+      this.searchValue = e.rubbish_name
+      this.litterDate = e
+      this.showList = []
     },
     //调用历史记录接口
     getHistory(v){
@@ -135,20 +149,20 @@ export default {
       console.log(this.jiangluosanWidth ,this.litterDate.rubbish_type,'--this.jiangluosanWidth ');
       // 动画
       this.showAnimation=true
-      // let userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      //生成用户丢弃记录
-      this.$http.post('/api/user/userDiscardLog',{userId:that.userInfo.id,rubbishId:this.litterDate.id})
-      .then(function(res) {
-        that.litterDate={}
-        console.log(res,'--生成用户丢弃记录')
-      })
-      .catch((err)=>{
-        console.log(err,'--err');
-      })
-      setInterval(() => {
+      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      setTimeout(() => {
         that.litterDate={}
         that.searchValue=''
         that.showAnimation = false
+        //生成用户丢弃记录
+        that.$http.post('/api/user/userDiscardLog',{userId:userInfo.id,rubbishId:this.litterDate.id})
+        .then(function(res) {
+          console.log(res,'--生成用户丢弃记录')
+        })
+        .catch((err)=>{
+          console.log(err,'--err');
+        })
+        console.log(that.litterDate,'定时器');
       }, 3000);
     }
   }
@@ -172,7 +186,11 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content:space-between;
-
+    &__list{
+      max-height: 200px;
+      margin: 0 12px;
+      overflow: auto;
+    }
     /deep/ .van-search{
       background:none;
     }
