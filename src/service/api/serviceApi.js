@@ -164,6 +164,58 @@ router.post('/createRub', (req, res) => {
             jsonWrite(res, result);
         }
     })
+})
+
+    //查看用户搜索频率
+    router.post('/getSearchLog', (req, res) => {
+    var sql_name = $sql.searchLog.search;
+    // var sql_password = $sql.user.select_password;
+    var params = req.body;
+    if (params.userId) {
+        sql_name += " where user_id ="+ params.userId +" and rubbish_id ="+ params.rubbishId;
+    }    
+    conn.query(sql_name, params.userId, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        // console.log(result);
+        if (result[0] === undefined) {
+            res.send([])   //查询不到则data 返回-1
+        } else {
+            jsonWrite(res, result);
+        }
+    })
+})
+    //记录用户搜索次数
+    router.post('/addSearchLog', (req, res) => {
+        var sql = $sql.searchLog.add;
+        var params = req.body;
+        console.log(params);
+        conn.query(sql, [params.userId, params.rubbishId], function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            if (result) {
+                jsonWrite(res, result);
+            }
+        })
+      });
+    //更新用户搜索次数
+    router.post('/updateSearchLog', (req, res) => {
+        var sql_name = $sql.searchLog.update;
+        // var sql_password = $sql.user.select_password;
+        var params = req.body;
+        if (params.id) {
+            sql_name += " set count = " + params.count + " where id ="+ params.id;
+        }    
+        conn.query(sql_name, params.userId, function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            if (result) {
+                jsonWrite(res, result);
+            }
+        })
   });
 
-module.exports = router;
+module.exports = router

@@ -46,8 +46,21 @@ export default {
   //  this.$http.post('/api/user/userDiscardLog',{userId:'1',rubbishId:'10000'}).then(function(response) {
   //     console.log(response)
   //   })
-  //查询用户丢弃记录
-    this.$http.post('/api/user/searchRubByUser',{userId:1,type:1}).then(function(response) {
+  //查询搜索次数
+  //   this.$http.post('/api/user/getSearchLog',{userId:1,rubbishId:10086}).then(function(response) {
+  //     console.log(response)
+  //   }).then(function(error) {
+  //       console.log(error);
+  //     })
+  // }
+  //创建搜索次数
+    //   this.$http.post('/api/user/addSearchLog',{userId:1,rubbishId:10086}).then(function(response) {
+    //   console.log(response)
+    // }).then(function(error) {
+    //     console.log(error);
+    //   })
+  //更新搜索次数
+   this.$http.post('/api/user/updateSearchLog',{id:1,count:2}).then(function(response) {
       console.log(response)
     }).then(function(error) {
         console.log(error);
