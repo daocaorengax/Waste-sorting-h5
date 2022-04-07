@@ -60,11 +60,11 @@ export default {
     //     console.log(error);
     //   })
   //更新搜索次数
-   this.$http.post('/api/user/updateSearchLog',{id:1,count:2}).then(function(response) {
-      console.log(response)
-    }).then(function(error) {
-        console.log(error);
-      })
+  //  this.$http.post('/api/user/updateSearchLog',{id:1,count:2}).then(function(response) {
+  //     console.log(response)
+  //   }).then(function(error) {
+  //     console.log(error);
+  //   })
   }
 }
 </script>

@@ -26,8 +26,12 @@
         <div class="lishi--title">{{history.typeName}}历史记录</div>
         <div class="lishi--box">
           <div class="lishi--box-item" v-for="(e,i) in history.list" :key="i" @click="itemClick(e)">
-            <van-image width="80" :src="require('../../assets/icon/'+e.rubbish_pic+'.png')"/>
-           {{e.rubbish_name}}
+            <div>
+              <van-image width="100" height="100" :src="require('../../assets/icon/'+e.rubbish_pic+'.png')"/>
+            </div>
+            <div class="lishi--box-item-title">
+              {{e.rubbish_name}}
+            </div>
           </div>
         </div>
       </div>
@@ -100,6 +104,17 @@ export default {
         this.onSearch()
       }
     },
+    //查询搜索次数记录
+    async getSearchCountLog(rubbish){
+      var me = this
+      return new Promise((reject,resolve)=>{
+        me.$http.post('/api/user/getSearchLog',{userId:me.userInfo.id,rubbishId:rubbish.id}).then(function(response) {
+          reject(response)
+        }).then(function(error) {
+          resolve(error)
+        })
+      })
+    },
     //搜索
     onSearch(){
       var that = this
@@ -118,10 +133,30 @@ export default {
       console.log(this.searchValue,'searchValue');
     },
     // 展示搜索
-    searchTs(e){
+    async searchTs(e){
       this.searchValue = e.rubbish_name
+      //用户选择搜索结果某一项触发记录搜索次数
+      const { data }=await this.getSearchCountLog(e)
+      console.log(data)
+      const type = data.length ? 'update' : 'add'
+      const param = data.length ? { id: data[0].id, count: data[0].count+1 }:{ userId: this.userInfo.id, rubbishId: e.id }
+      await this.createOrUpdateSearchLog(type,param)
       this.litterDate = e
       this.showList = []
+    },
+    //创建或更新搜索记录次数
+    createOrUpdateSearchLog(type,param){
+      const me = this
+      return new Promise((reject,resolve)=>{
+        const REQUEST_URL = `/api/user/${type}SearchLog`
+        this.$http.post(REQUEST_URL,param).then(function(response) {
+          console.log(response)
+          reject(response)
+        }).then(function(error) {
+          console.log(error);
+          resolve(error)
+        })
+      })
     },
     //调用历史记录接口
     getHistory(v){
@@ -248,11 +283,18 @@ export default {
       overflow: auto;
       padding:.3125rem 0;
       &-item{
+        display: flex;
+        flex-direction: column;
         margin:4px 10px;
         padding:4px 10px;
         font-size: 16px;
         background: hsla(30, 1%, 63%, 0.5);
         border-radius: .125rem;
+        &-title{
+          text-align: center;
+          color:#fff;
+          // font-weight: bold;
+        }
       }
     }
     &__box{
