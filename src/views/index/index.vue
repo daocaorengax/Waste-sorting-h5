@@ -153,17 +153,15 @@ export default {
       // 动画
       this.showAnimation=true
       setTimeout(() => {
-        that.litterDate={}
-      setTimeout(() => {
         //生成用户丢弃记录
         this.$http.post('/api/user/userDiscardLog',{userId:that.userInfo.id,rubbishId:this.litterDate.id})
         .then(function(res) {
-          that.litterDate={}
           console.log(res,'--生成用户丢弃记录')
         })
         .catch((err)=>{
           console.log(err,'--err');
         })
+        that.litterDate={}
         that.searchValue=''
         that.showAnimation = false
       }, 3000);
