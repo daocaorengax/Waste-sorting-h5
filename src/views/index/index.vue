@@ -40,6 +40,9 @@
       <van-row  class="page-conent__box" type="flex" justify="space-around">
         <van-col  class="page-conent__box--item" span="6" v-for="type in Object.keys(RUBBISH_TYPE)" :key="type"  @click="getHistory(type)">
           <van-image width="100" :src="require('../../assets/img/0'+RUBBISH_TYPE[type]+'.jpg')"/>
+          <span class="item-text">
+          {{RUBBISH_NAME[type]}}
+          </span>
         </van-col>
       </van-row>
     </div>
@@ -149,20 +152,20 @@ export default {
       console.log(this.jiangluosanWidth ,this.litterDate.rubbish_type,'--this.jiangluosanWidth ');
       // 动画
       this.showAnimation=true
-      let userInfo = JSON.parse(localStorage.getItem('userInfo'))
       setTimeout(() => {
-        // that.litterDate={}
-        that.searchValue=''
-        that.showAnimation = false
+        that.litterDate={}
+      setTimeout(() => {
         //生成用户丢弃记录
-        that.$http.post('/api/user/userDiscardLog',{userId:userInfo.id,rubbishId:that.litterDate.id})
+        this.$http.post('/api/user/userDiscardLog',{userId:that.userInfo.id,rubbishId:this.litterDate.id})
         .then(function(res) {
+          that.litterDate={}
           console.log(res,'--生成用户丢弃记录')
         })
         .catch((err)=>{
           console.log(err,'--err');
         })
-        console.log(that.litterDate,'定时器');
+        that.searchValue=''
+        that.showAnimation = false
       }, 3000);
     }
   }
@@ -250,7 +253,7 @@ export default {
         margin:4px 10px;
         padding:4px 10px;
         font-size: 16px;
-        background: rgba(161, 160, 159, 0.5);
+        background: hsla(30, 1%, 63%, 0.5);
         border-radius: .125rem;
       }
     }
@@ -258,7 +261,18 @@ export default {
       background: url('../../assets/img/lawn.png') no-repeat top center/100px 68px;
       background-size: 100% auto;
       background-position: 0 100%;
-      height: 120px;
+      height: 130px;
+      &--item{
+        display: flex;
+        flex-direction: column;
+        justify-content:space-between;
+        text-align: center;
+        .item-text{
+          background:hsla(0, 0%, 96%, 0.5);
+          border-radius: .125rem;
+          margin:0 10px 10px;
+        }
+      }
     }
   }
 }
