@@ -62,13 +62,13 @@ router.post('/login', (req, res) => {
 });
 
 //获取用户信息
-router.get('/getUser', (req, res) => {
+router.post('/getUser', (req, res) => {
   var sql_name = $sql.user.select_name;
   // var sql_password = $sql.user.select_password;
   var params = req.query;
   console.log(params,'获取用户信息',sql_name,'-sql_name');
   if (params.name) {
-      sql_name += "where user_name ='"+ params.name +"'";
+      sql_name += " where user_name ='"+ params.name +"'";
   }
   conn.query(sql_name, params.name, function(err, result) {
       if (err) {
