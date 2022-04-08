@@ -66,7 +66,7 @@ router.get('/getUser', (req, res) => {
   var sql_name = $sql.user.select_name;
   // var sql_password = $sql.user.select_password;
   var params = req.query;
-  console.log(params);
+  console.log(params,'获取用户信息',sql_name,'-sql_name');
   if (params.name) {
       sql_name += "where user_name ='"+ params.name +"'";
   }
