@@ -17,9 +17,9 @@ export default {
   created () {
     console.log(importData);
     //创建用户
-    // this.$http.post('/api/user/addUser',{userName:'110',password:'123456'}).then(function(response) {
-    //   console.log(response)
-    // })
+    this.$http.post('/api/user/getUser',{name:'15771968701'}).then(function(response) {
+      console.log(response)
+    })
     //登录
     // this.$http.post('/api/user/login',{name:'110'}).then(function(response) {
     //   console.log(response)
