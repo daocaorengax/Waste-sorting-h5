@@ -10,7 +10,8 @@ var sqlMap = {
   discard:{
     createLog: 'insert into user_rubbish_info (user_id, rubbish_id) values (?,?)',
     search: 'select * from user_rubbish_info',
-    innerSearch: 'select user_id,b.rubbish_name,b.rubbish_pic,b.rubbish_type from user_rubbish_info a,rubbish b '
+    innerSearch: 'select user_id,b.rubbish_name,b.rubbish_pic,b.rubbish_type from user_rubbish_info a,rubbish b ',
+    allSearch: 'SELECT user_rubbish_info.user_id, rubbish.rubbish_name,rubbish.rubbish_type, rubbish.rubbish_pic,user_search_log.count FROM user_rubbish_info INNER JOIN rubbish ON user_rubbish_info.rubbish_id = rubbish.id '
   },
   searchLog:{
     search: 'select * from user_search_log',

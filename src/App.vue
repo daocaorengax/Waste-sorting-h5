@@ -17,7 +17,10 @@ export default {
   created () {
     console.log(importData);
     //创建用户
-    this.$http.post('/api/user/getUser',{name:'15771968701'}).then(function(response) {
+    // this.$http.post('/api/user/getUser',{name:'15771968702'}).then(function(response) {
+    //   console.log(response)
+    // })
+    this.$http.post('/api/user/searchAllRubByUser',{userId:1,type:1}).then(function(response) {
       console.log(response)
     })
     //登录

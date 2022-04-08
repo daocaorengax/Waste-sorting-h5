@@ -166,6 +166,29 @@ router.post('/createRub', (req, res) => {
     })
 })
 
+  //查询用户历史操作 2.0
+  router.post('/searchAllRubByUser', (req, res) => {
+    var sql_name = $sql.discard.allSearch;
+    // var sql_password = $sql.user.select_password;
+    var params = req.body;
+    if (params.userId) {
+        sql_name += "and user_rubbish_info.user_id ="+ params.userId +" and rubbish.rubbish_type ="+ params.type+ "  INNER JOIN user_search_log ON user_search_log.rubbish_id = rubbish.id"
+        // sql_name += "where user_rubbish_info.user_id ="+ params.userId +" and rubbish.id = user_rubbish_info.rubbish_id and rubbish.rubbish_type ="+ params.type+ " INNER JOIN user_search_log ON user_search_log.rubbish_id = rubbish.id";
+        console.log(sql_name);
+    }    
+    conn.query(sql_name, params.userId, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        // console.log(result);
+        if (result[0] === undefined) {
+            res.send([])   //查询不到则data 返回-1
+        } else {
+            jsonWrite(res, result);
+        }
+    })
+})
+
     //查看用户搜索频率
     router.post('/getSearchLog', (req, res) => {
     var sql_name = $sql.searchLog.search;
