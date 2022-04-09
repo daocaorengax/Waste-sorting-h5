@@ -25,12 +25,12 @@
       <div class="page-conent__lishi" v-if="showHistory">
         <div class="lishi--title">{{history.typeName}}历史记录</div>
         <div class="lishi--box">
-          <div class="lishi--box-item" v-for="(e,i) in history.list" :key="i" @click="itemClick(e)">
+          <div class="lishi--box-item" :class="getClassName(e.drop_count)" v-for="(e,i) in history.list" :key="i" @click="itemClick(e)">
             <div>
               <van-image width="100" height="100" :src="require('../../assets/icon/'+e.rubbish_pic+'.png')"/>
             </div>
             <div class="lishi--box-item-title">
-              {{e.rubbish_name}}
+              {{e.rubbish_name}}({{e.drop_count}})
             </div>
           </div>
         </div>
@@ -42,10 +42,9 @@
         </div>
       </div>
       <van-row  class="page-conent__box" type="flex" justify="space-around">
-        <van-col  class="page-conent__box--item" span="6" v-for="type in Object.keys(RUBBISH_TYPE)" :key="type"  @click="getHistory(type)">
+        <van-col  class="page-conent__box--item" span="6" v-for="type in Object.keys(RUBBISH_TYPE)" :key="type"  @click="getHistory(RUBBISH_TYPE[type])">
           <van-image width="100" :src="require('../../assets/img/0'+RUBBISH_TYPE[type]+'.jpg')"/>
           <span class="item-text">
-          {{RUBBISH_NAME[type]}}
           </span>
         </van-col>
       </van-row>
@@ -66,7 +65,11 @@ export default {
       jiangluosanWidth:'',//中间区域宽度
       history:{},
       showList:[],//搜索提示数据
-
+      // Messages:new Map([
+      //   [/^[0-3]$/,'还要搜几次，我才能进入你的心'],
+      //   [4,'你是属老鼠的嘛'],
+      //   [8,'搜了好几次都记不住，小心强老师批评你哦']
+      // ])
     }
   },
   mixins: [],
@@ -75,19 +78,19 @@ export default {
       return JSON.parse(localStorage.getItem('userInfo'))
     },
     RUBBISH_TYPE(){
-      return {
-        RECYCLABLE:1,
-        KITCHEN:2,
-        OTHER:3,
-        HARMFUL:4
-      }
+      return { RECYCLABLE:1,  KITCHEN:2, OTHER:3,HARMFUL:4 }
     },
     RUBBISH_NAME(){
+      return { RECYCLABLE:'可回收垃圾',KITCHEN:'厨余垃圾',OTHER:'其他垃圾',HARMFUL:'有害垃圾', }
+    },
+    RUBBISH_KEY(){
+      return {1:'可回收垃圾',2:'厨余垃圾',3:'其他垃圾', 4:'有害垃圾',}
+    },
+    Messages(){
       return {
-        RECYCLABLE:'可回收垃圾',
-        KITCHEN:'厨余垃圾',
-        OTHER:'其他垃圾',
-        HARMFUL:'有害垃圾',
+        message_one:'还要搜几次，我才能进入你的心',
+        message_two:'你是属老鼠的嘛',
+        message_three:'搜了好几次都记不住，小心强老师批评你哦'
       }
     }
   },
@@ -95,6 +98,10 @@ export default {
   created () {
   },
   methods: {
+    getClassName(count){
+      if(count>1&&count===2) return 'orange'
+      if(count>1&&count>2) return 'red'
+    },
     //历史记录点击事件
     itemClick(e){
       console.log(e,'历史记录点击事件');
@@ -136,11 +143,11 @@ export default {
     async searchTs(e){
       this.searchValue = e.rubbish_name
       //用户选择搜索结果某一项触发记录搜索次数
-      const { data }=await this.getSearchCountLog(e)
-      console.log(data)
-      const type = data.length ? 'update' : 'add'
-      const param = data.length ? { id: data[0].id, count: data[0].count+1 }:{ userId: this.userInfo.id, rubbishId: e.id }
-      await this.createOrUpdateSearchLog(type,param)
+      // const { data }=await this.getSearchCountLog(e)
+      // console.log(data)
+      // const type = data.length ? 'update' : 'add'
+      // const param = data.length ? { id: data[0].id, count: data[0].count+1 }:{ userId: this.userInfo.id, rubbishId: e.id }
+      // await this.createOrUpdateSearchLog(type,param)
       this.litterDate = e
       this.showList = []
     },
@@ -159,53 +166,100 @@ export default {
       })
     },
     //调用历史记录接口
-    getHistory(v){
+    getHistory(v,bool){
       const that = this
-      this.showHistory=true
       console.log(v,'调用历史记录接口');
-      //搜索历史
-       this.$http.post('/api/user/searchRubByUser',{userId:that.userInfo.id,type:that.RUBBISH_TYPE[v]})
+      return new Promise((resolve,reject)=>{
+       //搜索历史
+       this.$http.post('/api/user/searchRubByUser',{userId:that.userInfo.id,type:v})
        .then(function(res) {
-         let {data,status} = res
+         let { data } = res
         // console.log(res,data,status,'--搜索垃圾')
-        that.history = {
-          typeName:that.RUBBISH_NAME[v],
-          list:data
+        if(!bool){
+          that.showHistory=true
+          that.history = {
+            typeName:that.RUBBISH_KEY[v],
+            list:data
+          }
         }
-      })
-      .catch(function(error) {
-          console.log(error);
+        resolve(data)
         })
+        .catch(function(error) {
+          console.log(error);
+          reject(error)
+        })
+      })
     },
     // 扔垃圾
-    setLitterClick(){
+    async setLitterClick(){
       let that = this
       var h = this.$refs.jiangluosan.offsetHeight
       var w = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)/4;
       this.jiangluosanHeight = (h-100)+'px';
       this.jiangluosanWidth = w*(this.litterDate.rubbish_type-0.5)+'px'
       console.log(this.jiangluosanWidth ,this.litterDate.rubbish_type,'--this.jiangluosanWidth ');
-      // 动画
-      this.showAnimation=true
-      setTimeout(() => {
-        //生成用户丢弃记录
-        this.$http.post('/api/user/userDiscardLog',{userId:that.userInfo.id,rubbishId:this.litterDate.id})
-        .then(function(res) {
-          console.log(res,'--生成用户丢弃记录')
+      //扔垃圾之前先查询记录
+      const history = await this.getHistory(that.litterDate.rubbish_type,true)
+      //检索是否已存在此记录
+      const filterData = history.find(x=>x.user_id===that.userInfo.id&&x.rubbish_id ===this.litterDate.id)
+      const type = filterData ? 'update' : 'add'
+      const param = filterData ? { id: filterData.id, count:filterData.drop_count+1 }:{userId:that.userInfo.id,rubbishId:this.litterDate.id,count:1}
+      if(type=='update'){
+        const randomNum = Math.round(Math.random()*10); 
+        let message =''
+        if([0,1,2,3].includes(randomNum))message = that.Messages['message_one'] 
+        if([4,5,6,7].includes(randomNum))message =that.Messages['message_two'] 
+        if([8,9,10].includes(randomNum))message =that.Messages['message_three']
+        this.$dialog.alert({
+          title: "提示",
+          message: message
+        }).then(()=>{
+          // 动画
+          this.showAnimation=true
+          setTimeout(async () => {
+            //生成用户丢弃记录
+            that.addOrUpdateByType(type,param)
+            that.litterDate={}
+            that.searchValue=''
+            that.showAnimation = false
+          }, 3000);
         })
-        .catch((err)=>{
-          console.log(err,'--err');
+      }else{
+        // 动画
+        this.showAnimation=true
+        setTimeout(async () => {
+          //生成用户丢弃记录
+          that.addOrUpdateByType(type,param)
+          that.litterDate={}
+          that.searchValue=''
+          that.showAnimation = false
+        }, 3000)
+      };
+    },
+    async addOrUpdateByType(type,param){
+      const me = this
+      return new Promise((reject,resolve)=>{
+        const REQUEST_URL = `/api/user/${type}DiscardLog`
+        this.$http.post(REQUEST_URL,param).then(function(response) {
+          console.log(response)
+          reject(response)
+        }).then(function(error) {
+          console.log(error);
+          resolve(error)
         })
-        that.litterDate={}
-        that.searchValue=''
-        that.showAnimation = false
-      }, 3000);
+      })
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+.orange{
+  background: orange !important;
+}
+.red{
+  background: red !important;
+}
 .page {
   height: 100vh;
   display: flex;

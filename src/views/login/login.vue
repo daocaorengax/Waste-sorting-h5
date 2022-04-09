@@ -90,6 +90,19 @@ export default {
       this.loginLoading = true
       this.accountLogin()
     },
+    async updatePwd(userId,password){
+      const me = this
+      return new Promise((resolve, reject)=>{
+         me.$http.post('/api/user/updateUser',{id:userId,password:password})
+        .then(function(res) {
+          const { status } = res
+          status==200?resolve(true):reject(false)
+        })
+        .catch(err => {
+          reject(false)
+        })
+      })
+    },
     accountLogin () {
       var vm = this
       const loadingToast = Toast.loading({
@@ -98,10 +111,19 @@ export default {
         message: '登录中...'
       })
       vm.$http.post('/api/user/getUser',{name:vm.userPhone})
-      .then(r=>{
+      .then(async r=>{
         console.log(r,Object.prototype.toString.call(r.data)=='[object Array]');
         if(r.status==200){
           if(Object.prototype.toString.call(r.data)=='[object Array]'){
+            // 预留设置密码接口
+            // if(r.data[0].user_password !== vm.userPassword){
+            //  const res = await vm.updatePwd(r.data[0].id, vm.userPassword)
+            //  if(!res){
+            //   vm.loginLoading = false
+            //   Toast('登录失败，请重新尝试！')
+            //   return
+            //  }
+            // }
             vm.$http.post('/api/user/login',{name:vm.userPhone,password:vm.userPassword})
             .then(function(res) {
               let { data, statusText } = res

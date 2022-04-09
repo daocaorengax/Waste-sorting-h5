@@ -21,7 +21,7 @@ router.post('/addUser', (req, res) => {
   var sql = $sql.user.add;
   var params = req.body;
   console.log(params);
-  conn.query(sql, [params.userName, params.password], function(err, result) {
+  conn.query(sql, [params.name, params.password], function(err, result) {
       if (err) {
           console.log(err);
       }
@@ -31,6 +31,22 @@ router.post('/addUser', (req, res) => {
   })
 });
 
+// 更新用户接口
+router.post('/updateUser', (req, res) => {
+    var sql_name = $sql.user.update;
+    var params = req.body;
+    if (params.id) {
+        sql_name += " set user_password = " + params.password + " where id ="+ params.id;
+    }    
+    conn.query(sql_name, params.userId, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        if (result) {
+            jsonWrite(res, result);
+        }
+    })
+  });
 
 //查找用户接口
 router.post('/login', (req, res) => {
@@ -128,11 +144,11 @@ router.post('/createRub', (req, res) => {
   });
 
   //记录用户丢弃垃圾历史记录
-  router.post('/userDiscardLog', (req, res) => {
+  router.post('/addDiscardLog', (req, res) => {
     var sql = $sql.discard.createLog;
     var params = req.body;
     console.log(params);
-    conn.query(sql, [params.userId, params.rubbishId], function(err, result) {
+    conn.query(sql, [params.userId, params.rubbishId,params.count], function(err, result) {
         if (err) {
             console.log(err);
         }
@@ -142,6 +158,22 @@ router.post('/createRub', (req, res) => {
     })
   });
 
+  router.post('/updateDiscardLog', (req, res) => {
+    var sql_name = $sql.discard.update;
+    // var sql_password = $sql.user.select_password;
+    var params = req.body;
+    if (params.id) {
+        sql_name += " set drop_count = " + params.count + " where id ="+ params.id;
+    }    
+    conn.query(sql_name, params.userId, function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        if (result) {
+            jsonWrite(res, result);
+        }
+    })
+  });
   // SELECT user_name,rubbish_name,rubbish_pic,rubbish_type FROM `user` as a INNER JOIN rubbish as b WHERE a.id = '1' AND b.id = '10000'
   
   //查询用户历史操作
@@ -239,6 +271,6 @@ router.post('/createRub', (req, res) => {
                 jsonWrite(res, result);
             }
         })
-  });
+    });
 
 module.exports = router
