@@ -20,9 +20,12 @@ export default {
     // this.$http.post('/api/user/getUser',{name:'15771968702'}).then(function(response) {
     //   console.log(response)
     // })
+<<<<<<< HEAD
     this.$http.post('/api/user/searchAllRubByUser',{userId:1,type:1}).then(function(response) {
       console.log(response)
     })
+=======
+>>>>>>> 6b8dd4c0536fd60f0927f673d00a3c2cf2eaea76
     //登录
     // this.$http.post('/api/user/login',{name:'110'}).then(function(response) {
     //   console.log(response)
