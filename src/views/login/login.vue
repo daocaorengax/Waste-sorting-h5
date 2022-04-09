@@ -97,34 +97,12 @@ export default {
         forbidClick: true,
         message: '登录中...'
       })
-      this.$http.post('/api/user/getUser',{name:this.userPhone})
+      vm.$http.post('/api/user/getUser',{name:vm.userPhone})
       .then(r=>{
-        console.log(r);
-        if(r.statusText=='ok'){
-          if(data==-1){
-            this.$http.post('/api/user/addUser',{name:this.userPhone,password:this.userPassword})
-            .then(function(res) {
-              let { data, statusText } = res
-              loadingToast.clear()
-              if (statusText == 'OK'&&Object.keys(data).length>0) {
-                //登陆成功后的操作
-                localStorage.setItem('userInfo',JSON.stringify(data))
-                Toast('登陆成功')
-                vm.$router.push('/index')
-              } else {
-                vm.loginLoading = false
-                Toast('登录失败，请重新尝试！')
-              }
-              vm.loginLoading = false
-            })
-            .catch(err => {
-              loadingToast.clear()
-              vm.loginLoading = false
-              Toast('登录失败，请重新尝试！---1')
-            })
-
-          }else{
-            this.$http.post('/api/user/login',{name:this.userPhone,password:this.userPassword})
+        console.log(r,Object.prototype.toString.call(r.data)=='[object Array]');
+        if(r.status==200){
+          if(Object.prototype.toString.call(r.data)=='[object Array]'){
+            vm.$http.post('/api/user/login',{name:vm.userPhone,password:vm.userPassword})
             .then(function(res) {
               let { data, statusText } = res
               loadingToast.clear()
@@ -145,9 +123,51 @@ export default {
               Toast('登录失败，请重新尝试！---1')
             })
             
+          }else{
+            console.log(r,'--vm');
+            vm.$http.post('/api/user/addUser',{name:vm.userPhone,password:vm.userPassword})
+            .then(function(res) {
+              let { data, statusText } = res
+              loadingToast.clear()
+              if (statusText == 'OK'&&Object.keys(data).length>0) {
+                vm.$http.post('/api/user/login',{name:vm.userPhone,password:vm.userPassword})
+                .then(function(res) {
+                  let { data, statusText } = res
+                  loadingToast.clear()
+                  if (statusText == 'OK'&&Object.keys(data).length>0) {
+                    //登陆成功后的操作
+                    localStorage.setItem('userInfo',JSON.stringify(data))
+                    Toast('登陆成功')
+                    vm.$router.push('/index')
+                  } else {
+                    vm.loginLoading = false
+                    Toast('登录失败，请重新尝试！')
+                  }
+                  vm.loginLoading = false
+                })
+                .catch(err => {
+                  loadingToast.clear()
+                  vm.loginLoading = false
+                  Toast('登录失败，请重新尝试！---1')
+                })
+              } else {
+                vm.loginLoading = false
+                Toast('登录失败，请重新尝试！')
+              }
+              vm.loginLoading = false
+            })
+            .catch(err => {
+              loadingToast.clear()
+              vm.loginLoading = false
+              Toast('登录失败，请重新尝试！---1')
+            })
+
           }
         }
       })
+    },
+    addUser(){
+
     },
     openAppTip () {
       this.$dialog.confirm({
