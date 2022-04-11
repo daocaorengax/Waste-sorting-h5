@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <keep-alive >
+    <!-- <keep-alive > -->
       <router-view v-if="$route.meta.keepAlive"/>
-    </keep-alive>
+    <!-- </keep-alive> -->
     <router-view v-if="!$route.meta.keepAlive"/>
   </div>
 </template>
@@ -15,7 +15,7 @@ import importData from '@/service/util/importFun.js'
 export default {
   name: 'app',
   created () {
-    console.log(importData);
+    // console.log(importData);
     //创建用户
     // this.$http.post('/api/user/getUser',{name:'15771968702'}).then(function(response) {
     //   console.log(response)

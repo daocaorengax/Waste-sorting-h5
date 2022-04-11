@@ -38,7 +38,7 @@
       <div ref="jiangluosan" class="page-conent__lishi jiangluosan"  v-else-if="litterDate.rubbish_pic">
         <div class="lishi--img" :class="{'animation':showAnimation}" @click="setLitterClick">
           <van-image :src="require('../../assets/img/jiangluosan.jpg')"/>
-          <van-image width="80" :src="require('../../assets/icon/'+litterDate.rubbish_pic+'.png')"/>
+          <van-image width="80" style="overflow: hidden;border-radius: 20%;" :class="{'rubbishImg':showAnimation}"  :src="require('../../assets/icon/'+litterDate.rubbish_pic+'.png')"/>
         </div>
       </div>
       <van-row  class="page-conent__box" type="flex" justify="space-around">
@@ -300,6 +300,28 @@ export default {
         left: 50%;
         transform: translateX(-50%);
 
+      }
+      .rubbishImg{
+        animation-name:rubbishBox;
+        animation-duration:2s;
+        animation-timing-function:linear;
+        animation-delay:1s;
+        /* Safari and Chrome: */
+        -webkit-animation-name:rubbishBox;
+        -webkit-animation-duration:2s;
+        -webkit-animation-timing-function:linear;
+        -webkit-animation-delay:1s;
+      }
+      @keyframes rubbishBox
+      {
+        from {border-radius:20%;top:0;left:0px;width: 80px;height: 100%;display: block;}
+        to {border-radius:100%;top:-45px;left:5px;width:0%;height: 0%;display: none;}
+      }
+
+      @-webkit-keyframes rubbishBox /* Safari and Chrome */
+      {
+        from {border-radius:20%;top:0;left:0px;width: 80px;height: 100%;display: block;}
+        to {border-radius:100%;top:-45px;left:5px;width:0%;height: 0%;display: none;}
       }
       .animation{
         animation-name:myfirst;
