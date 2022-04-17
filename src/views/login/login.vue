@@ -5,8 +5,8 @@
         <img src="@/assets/logo/logo.png" class="login-logo-img am-block">
       </div>
       <div class="login-header-right">
-        <div class="top-text">欢迎进入垃圾分类系统</div>
-        <div class="bot-text"></div>
+        <div class="top-text">见圾行事</div>
+        <div class="bot-text">欢迎进入垃圾分类系统</div>
       </div>
     </div>
     

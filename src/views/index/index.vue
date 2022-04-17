@@ -45,6 +45,7 @@
         <van-col  class="page-conent__box--item" span="6" v-for="type in Object.keys(RUBBISH_TYPE)" :key="type"  @click="getHistory(RUBBISH_TYPE[type])">
           <van-image width="100" :src="require('../../assets/img/0'+RUBBISH_TYPE[type]+'.jpg')"/>
           <span class="item-text">
+            {{RUBBISH_NAME[type]}}
           </span>
         </van-col>
       </van-row>
